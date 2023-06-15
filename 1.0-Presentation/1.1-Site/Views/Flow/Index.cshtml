@@ -1,0 +1,135 @@
+﻿@using Rickytech.Domain.Enum;
+@using Rickytech.Application.RickytechApp.Input
+@using Rickytech.Application.RickytechApp.Result
+
+@model FlowInput
+
+@{
+    var categoryModel = (List<CategoryResult>)TempData["Category"];
+    var flowModel = (List<FlowResult>)TempData["Flow"];
+}
+@section Styles {
+    <!-- ================== BEGIN page-css ================== -->
+    <link href="~/assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+    <!-- ================== END page-css ================== -->
+}
+
+<!-- BEGIN #content -->
+<div id="content" class="app-content">
+    <!-- BEGIN breadcrumb -->
+    <ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Tables</a></li>
+        <li class="breadcrumb-item active">Categoria</li>
+    </ol>
+    <!-- END breadcrumb -->
+    <!-- BEGIN page-header -->
+    <h1 class="page-header">Fluxo de caixa <small>administração do fluxo de caixa</small></h1>
+    <!-- END page-header -->
+    <!-- BEGIN panel -->
+    <div class="panel panel-inverse" data-sortable-id="form-stuff-12">
+        <!-- BEGIN panel-heading -->
+        <div class="panel-heading">
+            <h4 class="panel-title">Fluxo</h4>
+            <div class="panel-heading-btn">
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i class="fa fa-redo"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
+            </div>
+        </div>
+        <!-- END panel-heading -->
+        <!-- BEGIN panel-body -->
+        <div class="panel-body">
+            <form asp-action="Insert" asp-controller="Flow" asp-antiforgery="true" method="POST">
+                <fieldset>
+                    <legend class="mb-3">Incluir</legend>
+
+                    <div class="row mb-3">
+                        <label class="form-label col-form-label col-md-3">Categoria</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("CategoryId",
+                            new SelectList(categoryModel, "Id", "Name"),
+                            new { @class = "form-select"})
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label col-form-label col-md-3">@Html.DisplayNameFor(model => model.Name)</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" } )
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label col-form-label col-md-3">@Html.DisplayNameFor(model => model.OperationDate)</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.OperationDate, new { @class = "form-control", @placeholder="dd/mm/yyyy", @id="masked-input-date" } )
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label col-form-label col-md-3">@Html.DisplayNameFor(model => model.OperationValue)</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.OperationValue, new { @class = "form-control", @placeholder="10.000,00", @id="masked-input-date" } )
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-7 offset-md-3">
+                            <button type="submit" class="btn btn-primary w-100px me-5px">Incluir</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+            <hr class="bg-gray-500">
+            <div class="table-responsive">
+                <fieldset>
+                    <legend class="mb-3">Visualizar</legend>
+                    <table class="table table-striped mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Operação</th>
+                            <th>Categoria</th>
+                            <th>Histórico</th>
+                            <th>Valor</th>
+                            <th width="1%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            @foreach (var flow in flowModel)
+                            {
+                                <tr>
+                                    <td>@flow.OperationDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@((OperationType)flow.Operation)</td>
+                                    <td>@flow.CategoryName</td>
+                                    <td>@flow.Name</td>
+                                    <td>@flow.OperationValue</td>
+                                    <td nowrap>
+                                        <a href="~/Flow/Delete?Id=@flow.Id" class="btn btn-sm btn-danger w-60px">Deletar</a>
+                                    </td>
+                                </tr>
+                            }
+
+                    </tbody>
+                </table>
+                </fieldset>
+            </div>
+        </div>
+        <!-- END panel-body -->
+
+    </div>
+    <!-- END panel -->
+</div>
+<!-- END #content -->
+@section Scripts{
+    <!-- ================== BEGIN page-js ================== -->
+    <script src="~/assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="~/assets/js/demo/table-manage-default.demo.js"></script>
+    <script src="~/assets/plugins/highlightjs/cdn-assets/highlight.min.js"></script>
+    <script src="~/assets/js/demo/render.highlight.js"></script>
+    <!-- ================== END page-js ================== -->
+}

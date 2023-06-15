@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>b6cc9904-8af3-4ba2-a918-3d80645339b5</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
+    <PackageReference Include="Serilog" Version="2.11.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.48" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\plugins\js-cookie\dist\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\angular\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\core\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\modules\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\react\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\shared\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\svelte\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\types\" />
+    <Folder Include="wwwroot\assets\plugins\swiper\vue\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.esm.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.esm.js.map" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.esm.min.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\assets\plugins\bootstrap\dist\js\bootstrap.min.js.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\2.0-Application\2.1-Rickytech.Application\Rickytech.Application.csproj" />
+    <ProjectReference Include="..\..\5.0-Crosscutting\5.1-Rickytech.DependencyInjection\Rickytech.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>

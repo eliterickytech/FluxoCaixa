@@ -1,0 +1,302 @@
+﻿@using Rickytech.Application.RickytechApp.Result;
+@using Rickytech.Domain.Enum;
+@using System.Globalization;
+@section Styles {
+	<!-- ================== BEGIN page-css ================== -->
+	<link href="~/assets/plugins/jvectormap-next/jquery-jvectormap.css" rel="stylesheet" />
+	<link href="~/assets/plugins/nvd3/build/nv.d3.css" rel="stylesheet" />
+	<link href="~/assets/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
+	<link href="~/assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+	<link href="~/assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+	<!-- ================== END page-css ================== -->
+}
+@{
+	List<FlowResult> tempData = ViewData["Dashboard"] != null ? ((List<FlowResult>)ViewData["Dashboard"]) : null;
+
+	var debit = tempData.ToList().Where(x => x.Operation == Rickytech.Domain.Enum.OperationType.Debit).Sum(s => s.OperationValue);
+	var credit = tempData.ToList().Where(x => x.Operation == Rickytech.Domain.Enum.OperationType.Credit).Sum(s => s.OperationValue);
+	var total = (credit - debit);
+
+	var consolidatedPercent = credit > 0 ? string.Concat(Convert.ToInt32((debit / credit) * 100).ToString(), "%") : "";
+	List<FlowResult> debitTop3 = ViewData["Dashboard"] != null ? ((List<FlowResult>)ViewData["Dashboard"])
+		.OrderByDescending(v => v.OperationValue)
+		.Where(d => d.Operation == Rickytech.Domain.Enum.OperationType.Debit).ToList() : null;
+
+	List<FlowResult> creditTop3 = ViewData["Dashboard"] != null ? ((List<FlowResult>)ViewData["Dashboard"])
+		.OrderByDescending(v => v.OperationValue)
+		.Where(d => d.Operation == Rickytech.Domain.Enum.OperationType.Credit).ToList() : null;
+
+	var debitTop3Total = debitTop3 != null && debitTop3.Any() ? debitTop3.Sum(v => v.OperationValue) : 0;
+	var creditTop3Total = creditTop3 != null && creditTop3.Any() ? creditTop3.Sum(v => v.OperationValue) : 0;
+
+
+}
+
+<!-- BEGIN #content -->
+<div id="content" class="app-content">
+	<!-- BEGIN breadcrumb -->
+	<ol class="breadcrumb float-xl-end">
+		<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+		<li class="breadcrumb-item active"><a href="javascript:;">Dashboard</a></li>
+	</ol>
+	<!-- END breadcrumb -->
+	<!-- BEGIN page-header -->
+	<h1 class="page-header mb-3">Dashboard</h1>
+	<!-- END page-header -->
+	<!-- BEGIN daterange-filter -->
+	<div class="d-sm-flex align-items-center mb-3">
+		<a href="#" class="btn btn-dark me-2 text-truncate" id="daterange-filter">
+			<i class="fa fa-calendar fa-fw text-white text-opacity-50 ms-n1"></i>
+			<span>1 Jun 2021 - 7 Jun 2021</span>
+			<b class="caret ms-1 opacity-5"></b>
+		</a>
+	</div>
+	<!-- END daterange-filter -->
+	<!-- BEGIN row -->
+	<div class="row">
+		<!-- BEGIN col-6 -->
+		<div class="col-xl-6">
+			<!-- BEGIN card -->
+			<div class="card border-0 mb-3 overflow-hidden bg-gray-800 text-white">
+				<!-- BEGIN card-body -->
+				<div class="card-body">
+					<!-- BEGIN row -->
+					<div class="row">
+						<!-- BEGIN col-7 -->
+						<div class="col-xl-7 col-lg-8">
+							<!-- BEGIN title -->
+							<div class="mb-3 text-gray-500">
+								<b>SALDO CONSOLIDADO</b>
+								<span class="ms-2">
+									<i class="fa fa-info-circle" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-title="Total sales" data-bs-placement="top" data-bs-content="Net sales (gross sales minus discounts and returns) plus taxes and shipping. Includes orders from all sales channels."></i>
+								</span>
+							</div>
+							<!-- END title -->
+							<!-- BEGIN total-sales -->
+							<div class="d-flex mb-1">
+								<h2 class="mb-0">R$ <span data-animation="number" data-value="@total.ToString("N2", new CultureInfo("pt-BR"))">0.00</span></h2>
+							</div>
+							<!-- END total-sales -->
+							<!-- BEGIN percentage -->
+							<div class="mb-3 text-gray-500">
+								&nbsp;
+							</div>
+							<!-- END percentage -->
+							<hr class="bg-white bg-opacity-50" />
+							<!-- BEGIN row -->
+							<div class="row text-truncate">
+								<!-- BEGIN col-6 -->
+								<div class="col-6">
+									<div class=" text-gray-500">Total dos Créditos</div>
+									<div class="fs-18px mb-5px fw-bold">R$ <span data-animation="number" data-value="@credit.ToString("N2", new CultureInfo("pt-BR"))">0.00</span></div>
+									<div class="progress h-5px rounded-3 bg-gray-900 mb-5px">
+										<div class="progress-bar progress-bar-striped rounded-right bg-teal" data-animation="width" data-value="100%" style="width: 0%"></div>
+									</div>
+								</div>
+								<!-- END col-6 -->
+								<!-- BEGIN col-6 -->
+								<div class="col-6">
+									<div class=" text-gray-500">Total dos Débitos</div>
+									<div class="fs-18px mb-5px fw-bold">R$ <span data-animation="number" data-value="@debit.ToString("N2", new CultureInfo("pt-BR"))">0.00</span></div>
+									<div class="progress h-5px rounded-3 bg-gray-900 mb-5px">
+										<div class="progress-bar progress-bar-striped rounded-right bg-red" data-animation="width" data-value="@consolidatedPercent" style="width: 0%"></div>
+									</div>
+								</div>
+								<!-- END col-6 -->
+							</div>
+							<!-- END row -->
+						</div>
+						<!-- END col-7 -->
+						<!-- BEGIN col-5 -->
+						<div class="col-xl-5 col-lg-4 align-items-center d-flex justify-content-center">
+							<img src="~/assets/img/svg/img-1.svg" height="150px" class="d-none d-lg-block" />
+						</div>
+						<!-- END col-5 -->
+					</div>
+					<!-- END row -->
+				</div>
+				<!-- END card-body -->
+			</div>
+			<!-- END card -->
+		</div>
+		<!-- END col-6 -->
+		<!-- BEGIN col-6 -->
+		<div class="col-xl-6">
+			<!-- BEGIN row -->
+			<div class="row">
+				<!-- BEGIN col-6 -->
+				<div class="col-sm-6">
+					<!-- BEGIN card -->
+					<div class="card border-0 text-truncate mb-3 bg-gray-800 text-white">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- BEGIN title -->
+							<div class="mb-3 text-gray-500">
+								<b class="mb-3">TOP 3 DÉBITOS</b>
+								<span class="ms-2"><i class="fa fa-info-circle" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-title="Conversion Rate" data-bs-placement="top" data-bs-content="Percentage of sessions that resulted in orders from total number of sessions." data-original-title="" title=""></i></span>
+							</div>
+							<!-- END title -->
+							<!-- BEGIN conversion-rate -->
+							<div class="d-flex align-items-center mb-1">
+								<h2 class="text-white mb-0"><span data-animation="number" data-value="@debitTop3Total.ToString("N2", new CultureInfo("pt-BR"))">0.00</span></h2>
+								<div class="ms-auto">
+									
+								</div>
+							</div>
+							<!-- END conversion-rate -->
+							<!-- BEGIN percentage -->
+							<div class="mb-4 text-gray-500 ">
+								<hr class="bg-white bg-opacity-50" />
+							</div>
+							<!-- END percentage -->
+							<!-- BEGIN info-row -->
+							@{
+								var fa = "";
+								var percentDebitTop3 = debitTop3 != null && debitTop3.Any() ? (debitTop3.FirstOrDefault().OperationValue / debitTop3.Sum(v => v.OperationValue)) * 100 : 0;
+
+								for (int i = 0; i < (debitTop3.Count() > 0 ? 3 : debitTop3.Count()); i++)
+								{
+									if (i == 0) fa = "fa fa-circle text-red";
+									else if (i == 1) fa = "fa fa-circle text-warning";
+									else  fa = "fa fa-circle text-lime";
+									
+									<div class="d-flex mb-2">
+										<div class="d-flex align-items-center">
+											<i class="@fa fs-8px me-2"></i>
+											@debitTop3[i].Name
+										</div>
+										<div class="d-flex align-items-center ms-auto">
+											<div class="text-gray-500 small"><i class="fa fa-caret-up"></i> <span data-animation="number" data-value="@Convert.ToDecimal((debitTop3[i].OperationValue / debitTop3.Sum(v => v.OperationValue)) * 100).ToString("0.00")">0</span>%</div>
+											<div class="w-50px text-end ps-2 fw-bold"><span data-animation="number" data-value="@debitTop3[i].OperationValue.ToString("N2", new CultureInfo("pt-BR"))">0.00</span></div>
+										</div>
+									</div>
+
+								}
+							}
+
+							<!-- END info-row -->
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-6 -->
+				<!-- BEGIN col-6 -->
+				<div class="col-sm-6">
+					<!-- BEGIN card -->
+					<div class="card border-0 text-truncate mb-3 bg-gray-800 text-white">
+						<!-- BEGIN card-body -->
+						<div class="card-body">
+							<!-- BEGIN title -->
+							<div class="mb-3 text-gray-500">
+								<b class="mb-3">TOP 3 CRÉDITOS</b>
+								<span class="ms-2"><i class="fa fa-info-circle" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-title="Store Sessions" data-bs-placement="top" data-bs-content="Number of sessions on your online store. A session is a period of continuous activity from a visitor." data-original-title="" title=""></i></span>
+							</div>
+							<!-- END title -->
+							<!-- BEGIN store-session -->
+							<div class="d-flex align-items-center mb-1">
+								<h2 class="text-white mb-0"><span data-animation="number" data-value="@creditTop3Total.ToString("N2", new CultureInfo("pt-BR"))">0</span></h2>
+								<div class="ms-auto">
+									
+								</div>
+							</div>
+							<!-- END store-session -->
+							<!-- BEGIN percentage -->
+							<div class="mb-4 text-gray-500 ">
+								<hr class="bg-white bg-opacity-50" />
+							</div>
+							<!-- END percentage -->
+							<!-- BEGIN info-row -->
+							@{
+								var faCredit = "";
+								var percentCreditTop3 = creditTop3 != null && creditTop3.Any() ? (creditTop3.FirstOrDefault().OperationValue / creditTop3.Sum(v => v.OperationValue)) * 100 : 0;
+
+								for (int i = 0; i < (creditTop3.Count() > 3 ? 3 : creditTop3.Count()); i++)
+								{
+									if (i == 0) faCredit = "fa fa-circle text-teal";
+									else if (i == 1) faCredit = "fa fa-circle text-blue";
+									else faCredit = "fa fa-circle text-cyan";
+
+						
+									<div class="d-flex mb-2">
+										<div class="d-flex align-items-center">
+											<i class="@fa fs-8px me-2"></i>
+											@creditTop3[i].Name
+										</div>
+										<div class="d-flex align-items-center ms-auto">
+											<div class="text-gray-500 small"><i class="fa fa-caret-up"></i> <span data-animation="number" data-value="@Convert.ToDecimal((creditTop3[i].OperationValue / creditTop3.Sum(v => v.OperationValue)) * 100).ToString("0.00")">0</span>%</div>
+											<div class="w-50px text-end ps-2 fw-bold"><span data-animation="number" data-value="@creditTop3[i].OperationValue.ToString("N2", new CultureInfo("pt-BR"))">0.00</span></div>
+										</div>
+									</div>
+								}
+							}
+	
+							<!-- END info-row -->
+						</div>
+						<!-- END card-body -->
+					</div>
+					<!-- END card -->
+				</div>
+				<!-- END col-6 -->
+			</div>
+			<!-- END row -->
+		</div>
+		<!-- END col-6 -->
+	</div>
+	<!-- END row -->
+	<!-- BEGIN row -->
+	<div class="row">
+		<!-- BEGIN col-8 -->
+		<div class="col-xl-12 col-lg-12">
+			<!-- BEGIN card -->
+			<table id="data-table-default" class="table table-bordered widget-table rounded align-middle dark-mode">
+				<thead>
+					<tr>
+						<th width="1%" data-orderable="false">Id</th>
+						<th class="text-nowrap">Data</th>
+						<th class="text-nowrap">Operação</th>
+						<th class="text-nowrap">Categoria</th>
+						<th class="text-nowrap">Histórico</th>
+						<th class="text-nowrap">Valor</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach(var item in tempData)
+					{
+						<tr class="odd gradeX">
+							<td width="1%" class="fw-bold text-dark">@item.Id</td>
+							<td>@item.OperationDate.ToString("dd/MM/yyyy")</td>
+							<td>@((OperationType)item.Operation)</td>
+							<td>@item.CategoryName</td>
+							<td>@item.Name</td>
+							<td>@item.OperationValue.ToString("N2", new CultureInfo("pt-BR"))</td>
+						</tr>
+					}	
+				</tbody>
+			</table>
+
+			<!-- END card -->
+		</div>
+		<!-- END col-8 -->
+	</div>
+</div>
+<!-- END #content -->
+
+@section Scripts{
+    <!-- ================== BEGIN page-js ================== -->
+	<script src="~/assets/plugins/d3/d3.min.js"></script>
+	<script src="~/assets/plugins/nvd3/build/nv.d3.min.js"></script>
+	<script src="~/assets/plugins/jvectormap-next/jquery-jvectormap.min.js"></script>
+	<script src="~/assets/plugins/jvectormap-next/jquery-jvectormap-world-mill.js"></script>
+	<script src="~/assets/plugins/apexcharts/dist/apexcharts.min.js"></script>
+	<script src="~/assets/plugins/moment/min/moment.min.js"></script>
+	<script src="~/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+	<script src="~/assets/js/demo/dashboard-v3.js"></script>
+	<script src="~/assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
+	<script src="~/assets/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+	<script src="~/assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="~/assets/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+	<script src="~/assets/js/demo/table-manage-default.demo.js"></script>
+    <!-- ================== END page-js ================== -->
+
+}

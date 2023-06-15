@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Rickytech.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Repository\xhv5iqmg.tt5~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\2.0-Application\2.1-Rickytech.Application\Rickytech.Application.csproj" />
+    <ProjectReference Include="..\..\3.0-Domain\3.1-Rickytech.Domain\Rickytech.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

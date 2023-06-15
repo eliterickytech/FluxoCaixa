@@ -1,0 +1,141 @@
+﻿@using Rickytech.Application.RickytechApp.Input;
+@using Rickytech.Application.RickytechApp.Result;
+@using Rickytech.Domain.Enum;
+@{
+    var categoryModel = (List<CategoryResult>)TempData["Category"];
+}
+
+@model CategoryInput
+
+@section Styles {
+    <!-- ================== BEGIN page-css ================== -->
+    <link href="~/assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css" rel="stylesheet" />
+    <!-- ================== END page-css ================== -->
+}
+
+<!-- BEGIN #content -->
+<div id="content" class="app-content">
+    <!-- BEGIN breadcrumb -->
+    <ol class="breadcrumb float-xl-end">
+        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Tables</a></li>
+        <li class="breadcrumb-item active">Categoria</li>
+    </ol>
+    <!-- END breadcrumb -->
+    <!-- BEGIN page-header -->
+    <h1 class="page-header">Categoria <small>header small text goes here...</small></h1>
+    <!-- END page-header -->
+    <!-- BEGIN panel -->
+	<div class="panel panel-inverse" data-sortable-id="form-stuff-12">
+		<!-- BEGIN panel-heading -->
+		<div class="panel-heading">
+			<h4 class="panel-title">Categoria</h4>
+			<div class="panel-heading-btn">
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-default" data-toggle="panel-expand"><i class="fa fa-expand"></i></a>
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-success" data-toggle="panel-reload"><i class="fa fa-redo"></i></a>
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-warning" data-toggle="panel-collapse"><i class="fa fa-minus"></i></a>
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-danger" data-toggle="panel-remove"><i class="fa fa-times"></i></a>
+			</div>
+		</div>
+		<!-- END panel-heading -->
+		<!-- BEGIN panel-body -->
+		<div class="panel-body">
+            <div class="col-xl-6">
+                <fieldset>
+                    <form asp-action="Insert" asp-controller="Category" asp-antiforgery="true" method="POST">
+                        <fieldset>
+                            <legend class="mb-3">Incluir</legend>
+                            <div class="row mb-3">
+                                <label class="form-label col-form-label col-md-3">Operação</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.Operation,
+                                    new SelectList(Enum.GetValues(typeof(OperationType))),
+                                     new { @class = "form-select"})
+
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="form-label col-form-label col-md-3">@Html.DisplayNameFor(model => model.Name)</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control",@name = "txt_name" , @id = "txt_name" } )
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-7 offset-md-3">
+                                    <button type="submit" class="btn btn-primary w-100px me-5px">Incluir</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 offset-md-3">
+                                @Html.ValidationSummary()
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </fieldset>
+
+            </div>
+            <hr class="bg-gray-500">
+            <div class="table-responsive">
+                <fieldset>
+                    <legend class="mb-3">Visualizar</legend>
+                    <table class="table table-striped mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Operação</th>
+                                <th width="1%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in categoryModel)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Name</td>
+                                    <td>
+                                        @((OperationType) item.Operation)
+                                        
+                                    </td>
+                                    <td nowrap>
+                                        <a href="./Category/Delete?Id=@item.Id" class="btn btn-sm btn-danger w-60px">Deletar</a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+
+		</div>
+		<!-- END panel-body -->
+
+	</div>
+    <!-- END panel -->
+</div>
+<!-- END #content -->
+@section Scripts{
+    <!-- ================== BEGIN page-js ================== -->
+    <script src="~/assets/plugins/parsleyjs/dist/parsley.min.js"></script>
+    <script src="~/assets/plugins/highlightjs/cdn-assets/highlight.min.js"></script>
+    <script src="~/assets/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/assets/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
+    <script src="~/assets/js/demo/table-manage-default.demo.js"></script>
+    <script src="~/assets/plugins/highlightjs/cdn-assets/highlight.min.js"></script>
+    <script src="~/assets/js/demo/render.highlight.js"></script>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#txt_name").prop('data-parsley-required', true)
+        });
+</script>
+        
+    <!-- ================== END page-js ================== -->
+}

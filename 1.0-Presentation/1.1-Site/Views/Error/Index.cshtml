@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Diagnostics;
+@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.AspNetCore.Mvc;
+@using Site.Model;
+
+@{
+	var temp = (Problem)TempData["Error"];
+}
+
+@section Styles {
+<!-- ================== BEGIN core-css ================== -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+<link href="~/assets/css/vendor.min.css" rel="stylesheet" />
+<link href="~/assets/css/default/app.min.css" rel="stylesheet" />
+<!-- ================== END core-css ================== -->
+}
+
+<div id="app" class="app">
+	<!-- BEGIN error -->
+	<div class="error">
+		<div class="error-code">400</div>
+		<div class="error-content">
+			<div class="error-message">Encontramos um erro</div>
+			<div class="error-desc mb-4">
+				@temp.Title
+			</div>
+			<div>
+				<a asp-action="Index" asp-controller="Dashboard" class="btn btn-success px-3">Dashboard</a>
+			</div>
+		</div>
+	</div>
+</div>

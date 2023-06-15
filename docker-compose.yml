@@ -1,0 +1,53 @@
+version: '3.4'
+
+services: 
+    mssql-server:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        environment:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: "RickytechThot2020.."
+          MSSQL_PID: Express
+        
+        ports:
+          - "1445:1433"
+        volumes:
+          - C:\Fontes\Rickytech\Base:/var/opt/mssql/data
+
+    redis:
+        image: 
+            redis
+        command: 
+            redis-server --requirepass Thot2020..
+        ports:
+            - "6379:6379"
+    
+    elasticsearch:
+        container_name: 
+            es-container
+        image: 
+            docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+        environment:
+            - xpack.security.enabled=false
+            - "discovery.type=single-node"
+        networks:
+            - es-net
+        ports:
+            - 9200:9200
+
+    kibana:
+        container_name: 
+            kb-container
+        image: 
+            docker.elastic.co/kibana/kibana:7.11.0
+        environment:
+            - ELASTICSEARCH_HOSTS=http://es-container:9200
+        networks:
+            - es-net
+        depends_on:
+            - elasticsearch
+        ports:
+            - 5601:5601
+
+networks:
+  es-net:
+    driver: bridge
