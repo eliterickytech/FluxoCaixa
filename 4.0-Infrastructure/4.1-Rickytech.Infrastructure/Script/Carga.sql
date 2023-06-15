@@ -1,4 +1,4 @@
-
+CREATE DATABASE Rickytech
 GO
 USE Rickytech
 GO
